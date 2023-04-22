@@ -1,0 +1,20 @@
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
+
+#define SENSOR_PIN 4
+
+#define SSID "Azrrael"
+#define SSID_PASSWORD "3006750425ABC"
+
+#define MQTT_BROKER "broker.hivemq.com"
+#define MQTT_CLIENT_ID "ESP_COUNTER"
+#define MQTT_IN_TOPIC "SDA/EAFIT_PARKING/VICTOR/INPUT"
+#define MQTT_OUT_TOPIC "SDA/EAFIT_PARKING/VICTOR/OUTPUT"
+
+#define LIGHTS_PIN 2
+#define LIGHTS_COUNT 25
+
+#define SENSOR_KEY 0xAA
+
+#endif
+
