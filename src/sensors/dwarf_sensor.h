@@ -35,8 +35,7 @@ int DwarfSensor::read() {
         return -1;
     } else {
         return 0;
-    }
-    
+    }  
 }
 
 void DwarfSensor::loop() {
