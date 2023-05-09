@@ -3,8 +3,8 @@
 
 #define SENSOR_PIN 4
 
-#define SSID "Azrrael"
-#define SSID_PASSWORD "3006750425ABC"
+#define SSID "Pixel"
+#define SSID_PASSWORD "1128264989"
 
 #define MQTT_BROKER "broker.hivemq.com"
 #define MQTT_CLIENT_ID "ESP_COUNTER"
@@ -17,4 +17,3 @@
 #define SENSOR_KEY 0xAA
 
 #endif
-
