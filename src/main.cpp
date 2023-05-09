@@ -22,7 +22,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
 Parking parking = Parking(0x0ABC, 20);
 
-DwarfSensor sensor = DwarfSensor(SENSOR_PIN, 2, 5000);
+DwarfSensor sensor = DwarfSensor(SENSOR_PIN1, SENSOR_PIN2, 5000);
 WiFiClient espClient;
 WiFiManager manager;
 PubSubClient mqtt_client(MQTT_BROKER, 1883, callback, espClient);

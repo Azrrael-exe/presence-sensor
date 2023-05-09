@@ -1,10 +1,13 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#define SENSOR_PIN 4
+#define SENSOR_PIN1 4
+#define SENSOR_PIN2 5
 
-#define SSID "Pixel"
-#define SSID_PASSWORD "1128264989"
+#define ACTUATOR_PIN 15
+
+#define SSID "Santiago iPhone"
+#define SSID_PASSWORD "dog12345"
 
 #define MQTT_BROKER "broker.hivemq.com"
 #define MQTT_CLIENT_ID "ESP_COUNTER"
