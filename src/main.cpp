@@ -4,7 +4,7 @@
 #include <ArduinoJson.h>
 
 #include "sensors/dwarf_sensor.h"
-#include "actuators/dummy.h"
+#include "actuators/lighthouse_display.h"
 #include "config/constants.h"
 #include "com/wifi.h"
 #include "com/mqtt.h"
@@ -23,8 +23,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
 }
 
 Parking parking = Parking(0x0ABC, 20);
-
-Dummy display;
+LighthouseDisplay display;
 DwarfSensor sensor = DwarfSensor(SENSOR_PIN1, SENSOR_PIN2, 5000);
 WiFiClient espClient;
 WiFiManager manager;
@@ -34,9 +33,9 @@ MqttManager mqtt_manager = MqttManager(MQTT_CLIENT_ID, MQTT_IN_TOPIC, MQTT_OUT_T
 
 void setup() {
   sensor.config();
+  display.config();
   Serial.begin(115200);
   WiFi.begin(SSID, SSID_PASSWORD);
-  pinMode(LIGHTS_PIN, OUTPUT);
   manager.connect(WiFi, Serial);
   mqtt_manager.connect(mqtt_client, Serial);
 }
