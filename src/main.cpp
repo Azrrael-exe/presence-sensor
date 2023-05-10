@@ -4,6 +4,7 @@
 #include <ArduinoJson.h>
 
 #include "sensors/dwarf_sensor.h"
+#include "actuators/dummy.h"
 #include "config/constants.h"
 #include "com/wifi.h"
 #include "com/mqtt.h"
@@ -18,10 +19,12 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("] ");
   input_buffer = String((char*) payload, length);
   Serial.println(input_buffer);
+  input_queue = true;
 }
 
 Parking parking = Parking(0x0ABC, 20);
 
+Dummy display;
 DwarfSensor sensor = DwarfSensor(SENSOR_PIN1, SENSOR_PIN2, 5000);
 WiFiClient espClient;
 WiFiManager manager;
@@ -42,5 +45,11 @@ void loop() {
   sensor.loop();
   mqtt_client.loop();
   manager.checkStatus(WiFi, Serial);
-  parking.loop(sensor, mqtt_client);
+  parking.loop(
+    sensor, 
+    mqtt_client, 
+    input_buffer, 
+    input_queue, 
+    display
+  );
 }
