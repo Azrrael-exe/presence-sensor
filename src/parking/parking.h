@@ -10,49 +10,63 @@
 
 class Parking {
     private:
-        uint16_t id;
-        uint16_t size;
+        String clientId;
+        int capacity;
+        String inputTopic;
+        String outputTopic;
+        String registerInputtopic;
+        String registerOutputtopic;
+        bool connection_status = false;
     public:
-        Parking(uint16_t id, uint16_t size);
-        uint16_t getID();
-        uint16_t getSize();
-        void loop(SensorABC &sensor, PubSubClient &mqtt, String &input, bool &queue, DisplayABC &display );
+        Parking(String clientId, int capacity, String inputTopic, String outputTopic, String registerInputtopic, String registerOutputtopic);
+        void setupRegistration(PubSubClient &mqtt, String &input, bool &queue);
+        void loop(SensorABC &sensor, PubSubClient &mqtt, String &input, bool &queue, DisplayABC &display);
 };
 
-Parking::Parking(uint16_t id, uint16_t size) {
-    this->id = id;
-    this->size = size;
+Parking::Parking(String clientId, int capacity, String inputTopic, String outputTopic, String registerInputtopic, String registerOutputtopic){
+    this->clientId = clientId; 
+    this->capacity = capacity;
+    this->inputTopic = inputTopic;
+    this->outputTopic = outputTopic;
+    this->registerInputtopic = registerInputtopic;
+    this->registerOutputtopic = registerOutputtopic;
 }
 
-uint16_t Parking::getID() {
-    return this->id;
+void Parking::setupRegistration(PubSubClient &mqtt, String &input, bool &queue){
+    DynamicJsonDocument  output(200);
+    output["id"] = this->clientId;
+    output["capacity"] = this->capacity;
+    String output_str;
+    serializeJson(output, output_str);
+    Serial.println(output_str);
+    mqtt.publish(this->registerOutputtopic.c_str(), output_str.c_str());
+    mqtt.subscribe(this->registerInputtopic.c_str());
 }
 
-uint16_t Parking::getSize() {
-    return this->size;
-}
-
-void Parking::loop(SensorABC &sensor, PubSubClient &mqtt, String &input, bool &queue, DisplayABC &display ) {
+void Parking::loop(SensorABC &sensor, PubSubClient &mqtt, String &input, bool &queue, DisplayABC &display) {
     if(sensor.hasChanged()){
         bool value = sensor.getValue();
         DynamicJsonDocument  output(20);
         output["sensor"] = sensor.getValue();
         String output_str;
         serializeJson(output, output_str);
-        // TODO: Remove the dependendecy to Constats
-        mqtt.publish(MQTT_OUT_TOPIC, output_str.c_str());
+        mqtt.publish(this->outputTopic.c_str(), output_str.c_str());
     }
-    if (queue) {
-        DynamicJsonDocument mem_allocation(200);
-        DeserializationError error = deserializeJson(mem_allocation, input);
-        float occupancy = mem_allocation["occupancy"];
-        if (error) {
-            Serial.print(F("deserializeJson() failed: "));
-            Serial.println(error.f_str());
-        }
-        Serial.println(occupancy);
+  	else if (queue) {
+      DynamicJsonDocument response(200); 
+      DeserializationError error = deserializeJson(response, input);
+      if (error) {
+        Serial.print(F("deserializeJson() failed: "));
+        Serial.println(error.f_str());
+      }
+      if (response.containsKey("registered")) {
+        mqtt.subscribe(this->inputTopic.c_str());
+      }
+      if (response.containsKey("occupancy")) {
+        float occupancy = response["occupancy"];
         display.setOccupancy(occupancy);
-        queue = false;
+      }
+      queue = false;
     }
 }
 
