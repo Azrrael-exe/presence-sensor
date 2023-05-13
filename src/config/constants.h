@@ -1,6 +1,8 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+#define VERSION "0.1.0"
+
 #define SENSOR_PIN1 4
 #define SENSOR_PIN2 5
 
