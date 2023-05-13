@@ -22,15 +22,15 @@ void LighthouseDisplay::setOccupancy(float occupancy) {
         }
         pixels.show();
     }
-    else if (0.8 > occupancy >= 0.5){
+    else if ((0.8 > occupancy) && (occupancy >= 0.5)){
         for (int i = 0; i <= LIGHTS_COUNT; ++i) {
-            pixels.setPixelColor(i, 255, 255, 0);
+            pixels.setPixelColor(i, 255, 255, 9);
         }
         pixels.show();        
     }
-    else {
+    else if (occupancy < 0.5){
         for (int i = 0; i <= LIGHTS_COUNT; ++i) {
-            pixels.setPixelColor(i, 0, 0, 255);
+            pixels.setPixelColor(i, 0, 255, 0);
         }
         pixels.show();
     }

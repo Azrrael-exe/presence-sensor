@@ -22,14 +22,13 @@ void callback(char* topic, byte* payload, unsigned int length) {
   input_queue = true;
 }
 
-Parking parking = Parking(0x0ABC, 20);
+Parking parking = Parking(MQTT_CLIENT_ID, CAPACITY, MQTT_IN_TOPIC, MQTT_OUT_TOPIC, MQTT_REGISTER_INPUT_TOPIC, MQTT_REGISTER_OUTPUT_TOPIC);
 LighthouseDisplay display;
 DwarfSensor sensor = DwarfSensor(SENSOR_PIN1, SENSOR_PIN2, 5000);
 WiFiClient espClient;
 WiFiManager manager;
 PubSubClient mqtt_client(MQTT_BROKER, 1883, callback, espClient);
 MqttManager mqtt_manager = MqttManager(MQTT_CLIENT_ID, MQTT_IN_TOPIC, MQTT_OUT_TOPIC);
-
 
 void setup() {
   sensor.config();
@@ -38,6 +37,7 @@ void setup() {
   WiFi.begin(SSID, SSID_PASSWORD);
   manager.connect(WiFi, Serial);
   mqtt_manager.connect(mqtt_client, Serial);
+  parking.setupRegistration(mqtt_client, input_buffer, input_queue);
 }
 
 void loop() {
